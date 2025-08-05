@@ -35,7 +35,7 @@ while True:
         sys.exit(0)
     elif option == '2':
         if __name__ == '__main__':
-            logging.basicConfig(
+            logging.basicConfig(filename='dev.log',filemode='a',
                 level=logging.INFO,
                 format='%(asctime)s - %(levelname)s - %(message)s',
                 datefmt='%Y-%m-%d %H:%M:%S'
@@ -52,11 +52,18 @@ while True:
                 observer.start()
 
                 try:
+                    print(Fore.BLUE +"  Monitoring started! Any changes will be logged here, check dev.log for saved data.")
                     while True:
+                        user_inp = input(Fore.YELLOW + "  ->")
+                        if user_inp.strip().lower()=='q':
+                            break
                         time.sleep(1)
-                except KeyboardInterrupt:
+                except Exception as e:
+                    print(Fore.RED +"  An error occured: ")
+                finally:
                     observer.stop()
                     observer.join()
+            
 
 # Option Two -------------------------------------------------------------------------------------------
     elif option == '1':
@@ -68,7 +75,7 @@ while True:
         if choice == '1':
             names = input(Fore.YELLOW +"  Enter the name of the file/s you want ot move (separated by commas): ").split(',')
             cur = input(Fore.YELLOW+"  Enter the current directory of the file/s: ").strip()
-            dest = input(Fore.YELLOW+"  Enter the directory you want to mmove the file/s to: ").strip()
+            dest = input(Fore.YELLOW+"  Enter the directory you want to move the file/s to: ").strip()
 
             if not os.path.exists(dest):
                 print(Fore.GREEN +"  Path does not exist..")
