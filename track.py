@@ -27,6 +27,8 @@ while True:
         1. Help you move, delete and rename your file/s in a chosen path.
         2. Give you a log of all the activites happening in a specified directory.
         3. Play a game with you!
+        4. Download a Youtube video to a specified path using its URL.
+        5. Open the instructions file for you.
         (you can enter 'q' to quit anytime)""")
 
 # Option One -------------------------------------------------------------------------------------------
