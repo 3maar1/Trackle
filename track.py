@@ -7,7 +7,13 @@ import logging
 import shutil
 from colorama import init,Fore 
 import random
+import json
+from fuzzywuzzy import fuzz
+import yt_dlp
+
+
 init(autoreset=True)
+    
 while True:
     print(Fore.BLUE + """  Made with ♥︎ by 3maar. All rights reserved.
       """)
@@ -24,58 +30,24 @@ while True:
             █████████████
     """)
     print(Fore.GREEN +"""  I can:
-        1. Help you move, delete and rename your file/s in a chosen path.
-        2. Give you a log of all the activites happening in a specified directory.
-        3. Play a game with you!
-        4. Download a Youtube video to a specified path using its URL.
-        5. Open the instructions file for you.
-        (you can enter 'q' to quit anytime)""")
-
+        1. Help you move, delete and rename your file/s in a chosen path,
+        2. Give you a log of all the activites happening in a specified directory,
+        3. Search for files in a chosen directory using its type, name or closest matching name,
+        4. and Play a minigame with you!
+        (you can enter 'q' to quit anytime)
+                          """)
+    option = input(Fore.YELLOW +"  Please select an option (1-4): ")
 # Option One -------------------------------------------------------------------------------------------
-    option = input(Fore.YELLOW +"  Please select an option (1-3): ")
     if option == 'q':
         sys.exit(0)
-    elif option == '2':
-        if __name__ == '__main__':
-            logging.basicConfig(filename='dev.log',filemode='a',
-                level=logging.INFO,
-                format='%(asctime)s - %(levelname)s - %(message)s',
-                datefmt='%Y-%m-%d %H:%M:%S'
-            )
-            input_paths = input(Fore.YELLOW +"  Enter the path/s you want to select separated by commas: ").split(',')
-            input_paths = [p.strip() for p in input_paths if os.path.isdir(p.strip())]
-            if not input_paths:
-                print(Fore.GREEN +"  Path is invalid..")
-            else:
-                event_handler = LoggingEventHandler()
-                observer = Observer()
-                for path in input_paths:
-                    observer.schedule(event_handler, path, recursive=True)
-                observer.start()
-
-                try:
-                    print(Fore.BLUE +"  Monitoring started! Any changes will be logged here, check dev.log for saved data.")
-                    while True:
-                        user_inp = input(Fore.YELLOW + "  ->")
-                        if user_inp.strip().lower()=='q':
-                            break
-                        time.sleep(1)
-                except Exception as e:
-                    print(Fore.RED +"  An error occured: ")
-                finally:
-                    observer.stop()
-                    observer.join()
-            
-
-# Option Two -------------------------------------------------------------------------------------------
     elif option == '1':
         choice = input(Fore.YELLOW +"""  Do you want to:
                 1. Move the file to a new location
                 2. Rename the file
                 3. Delete the file
-                       """)
+                ->  """)
         if choice == '1':
-            names = input(Fore.YELLOW +"  Enter the name of the file/s you want ot move (separated by commas): ").split(',')
+            names = input(Fore.YELLOW +"  Enter the name of the file/s you want to move (separated by commas): ").split(',')
             cur = input(Fore.YELLOW+"  Enter the current directory of the file/s: ").strip()
             dest = input(Fore.YELLOW+"  Enter the directory you want to move the file/s to: ").strip()
 
@@ -113,7 +85,7 @@ while True:
                 print(Fore.GREEN +"  File not Found.")
 
         elif choice == '3':
-            names = input(Fore.YELLOW+"  Enter the name of the file/s you want to delete (separated bby commas): ").split(',')
+            names = input(Fore.YELLOW+"  Enter the name of the file/s you want to delete (separated by commas): ").split(',')
             folder = input(Fore.YELLOW+"  Enter the directory path of the file/s: ").strip()
 
             for name in names:
@@ -127,10 +99,54 @@ while True:
                     print(Fore.GREEN +"  Permission denied..")
                 except Exception as e:
                     print(Fore.GREEN +"  An error occured..")
-
+# Option Two -------------------------------------------------------------------------------------------
+    elif option == '2':
+        if __name__ == '__main__':
+            logging.basicConfig(filename='dev.log',filemode='a',
+                level=logging.INFO,
+                format='%(asctime)s - %(levelname)s - %(message)s',
+                datefmt='%Y-%m-%d %H:%M:%S'
+            )
+            input_paths = input(Fore.YELLOW +"  Enter the path/s you want to select separated by commas: ").split(',')
+            input_paths = [p.strip() for p in input_paths if os.path.isdir(p.strip())]
+            if not input_paths:
+                print(Fore.GREEN +"  Path is invalid..")
+            else:
+                event_handler = LoggingEventHandler()
+                observer = Observer()
+                for path in input_paths:
+                    observer.schedule(event_handler, path, recursive=True)
+                observer.start()
+                
+                try:
+                    print(Fore.BLUE +"  Monitoring started! Any changes will be logged, check dev.log for saved data.")
+                    while True:
+                        user_inp = input(Fore.YELLOW + "  ->")
+                        if user_inp.strip().lower()=='q':
+                            break
+                        time.sleep(1)
+                except Exception as e:
+                    print(Fore.RED +"  An error occured: ")
+                finally:
+                    observer.stop()
+                    observer.join()
 # Option Three -------------------------------------------------------------------------------------------
     elif (option == '3'):
-        print (Fore.RED+"  Let's play rock paper scissors!")
+        while True:
+            poth=input(Fore.YELLOW + "  Enter the root directory for the file: ")
+            if poth == 'q':
+                break
+            fuzzt=input(Fore.YELLOW + "  Enter the type/s of the file you're looking for separated by spaces (or press enter to skip): ")
+            fuzzys=input(Fore.YELLOW + "  Enter the name or the closest match of the file you want to find (or press enter to skip): ")
+            fuzzt=fuzzt.split(" ")
+            for roots, dirs, files in os.walk(poth):
+                for namo in files:
+                    if fuzzt == [""] or namo.endswith(tuple(fuzzt)):
+                        if fuzzys == "" or fuzz.token_sort_ratio(fuzzys.lower(), namo.lower()) > 50:
+                            print(Fore.BLUE + "  Found: " + os.path.join(roots, namo))
+# Option Four -------------------------------------------------------------------------------------------
+    elif (option == '4'):
+        print (Fore.RED+"  Let's play rock paper scissors! if i win, i'm gonna delete sys32 :) (jk)")
         choices = ['rock','paper','scissors']
         while True:
                 user = input(Fore.YELLOW+"  Enter your choice: ")

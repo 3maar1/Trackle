@@ -1,0 +1,6 @@
+colorama
+fuzzywuzzy
+watchdog
+python-Levenshtein
+yt-dlp
+git+https://github.com/pytube/pytube
